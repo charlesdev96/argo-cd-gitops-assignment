@@ -1,0 +1,26 @@
+# Replace YOUR_GITHUB_USERNAME with your GitHub username/repository owner.
+# An ArgoCD Application: it tells ArgoCD "watch this folder in this Git repo
+# and make the cluster look exactly like it".
+#
+# Before applying, change repoURL to the Git repository that holds the
+# contents of the gitops-config/ folder (see README.md).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-staging
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/YOUR_GITHUB_USERNAME/argocd-gitops-assignment.git
+    targetRevision: main
+    path: gitops-config/overlays/staging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: staging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
